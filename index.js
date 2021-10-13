@@ -79,12 +79,15 @@ function getWinners(arr, cb) {
       winners.push(obj['Home Team Name']);
     } else if (obj['Home Team Goals'] < obj['Away Team Goals']) {
       winners.push(obj['Away Team Name']);
+    } else if (obj['Home Team Goals'] === obj['Away Team Goals']) {
+      winners.push(obj['Win conditions'].split(' ')[0]);
     }
   });
+
   return winners;
 }
 
-// console.log(getWinners(fifaData, getFinals));
+// getWinners(fifaData, getFinals);
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 5: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 
 Use the higher-order function getWinnersByYear to do the following:
@@ -97,24 +100,16 @@ hint: the strings returned need to exactly match the string in step 4.
  */
 
 function getWinnersByYear(arr, getYears, getWinners) {
-  let newArr = [];
   let years = getYears(arr, getFinals);
   let winners = getWinners(arr, getFinals);
-
-  function createString(year, winner) {
-    return `In ${year}, ${winner} won the world cup!`;
-  }
-
-  years.forEach((year) => {
-    winners.forEach((winner) => {
-      newArr.push(createString(year, winner));
-    });
+  let newArr = years.map(function (value, index) {
+    return `In ${value}, ${winners[index]} won the world cup!`;
   });
 
   return newArr;
 }
-// COME BACK TOO!!!
-console.log(getWinnersByYear(fifaData, getYears, getWinners));
+
+// console.log(getWinnersByYear(fifaData, getYears, getWinners));
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 6: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 Use the higher order function getAverageGoals to do the following: 
@@ -126,7 +121,22 @@ Use the higher order function getAverageGoals to do the following:
 Example of invocation: getAverageGoals(getFinals(fifaData));
 */
 
-function getAverageGoals(cb) {}
+function getAverageGoals(cb) {
+  let finalsArr = cb;
+  let homeTeamGoals = finalsArr.reduce(
+    (sum, val) => sum + val['Home Team Goals'],
+    0
+  );
+  let homeTeamGoalsAverage = homeTeamGoals / finalsArr.length;
+  let awayTeamGoals = finalsArr.reduce(
+    (sum, val) => sum + val['Away Team Goals'],
+    0
+  );
+  let awayTeamGoalsAverage = awayTeamGoals / finalsArr.length;
+  return (awayTeamGoalsAverage + homeTeamGoalsAverage).toFixed(2);
+}
+
+// console.log(getAverageGoals(getFinals(fifaData)));
 
 /// 🥅 STRETCH 🥅 ///
 
